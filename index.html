@@ -1,72 +1,41 @@
-<!doctype html>
-<html lang="el">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>Boat Life Simulator 3D</title>
+<!doctype html><html lang="el"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Boat Life Simulator v0.2</title>
 <style>
-html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#061522;font-family:system-ui,-apple-system,sans-serif;touch-action:none}
-#game{position:fixed;inset:0;overflow:hidden} canvas{display:block;width:100%;height:100%}
-#hud{position:absolute;top:max(12px,env(safe-area-inset-top));left:12px;right:12px;display:flex;justify-content:space-between;gap:8px;pointer-events:none;color:#fff}
-.card{background:rgba(8,17,27,.72);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(10px);border-radius:12px;padding:8px 11px;font-size:13px;font-weight:700;min-width:92px}
-.small{font-size:10px;opacity:.7;font-weight:500}
-#rightInfo{display:flex;gap:8px}
-#mission{position:absolute;top:86px;left:50%;transform:translateX(-50%);color:white;background:rgba(8,17,27,.64);border:1px solid rgba(255,255,255,.15);padding:8px 12px;border-radius:12px;font-size:12px;text-align:center;pointer-events:none}
-#controls{position:absolute;left:0;right:0;bottom:max(14px,env(safe-area-inset-bottom));padding:0 14px;display:flex;justify-content:space-between;align-items:end;pointer-events:none}
-#steer{width:126px;height:126px;border:1px solid rgba(255,255,255,.25);border-radius:50%;background:rgba(10,20,30,.48);position:relative;pointer-events:auto}
-#stick{position:absolute;width:54px;height:54px;border-radius:50%;left:36px;top:36px;background:rgba(255,255,255,.78)}
-#pedals{display:flex;flex-direction:column;gap:10px;pointer-events:auto}
-.btn{width:82px;height:62px;border-radius:18px;border:1px solid rgba(255,255,255,.25);color:#fff;font-weight:800;font-size:12px}
-#gas{background:rgba(21,145,93,.85)} #brake{background:rgba(180,45,45,.85)}
-#start{position:absolute;inset:0;display:grid;place-items:center;background:linear-gradient(rgba(2,10,18,.25),rgba(2,10,18,.72));color:white}
-.panel{max-width:340px;margin:20px;padding:24px;border-radius:22px;background:rgba(8,17,27,.84);border:1px solid rgba(255,255,255,.18);backdrop-filter:blur(12px);text-align:center}
-#start button{margin-top:12px;border:0;border-radius:14px;padding:13px 20px;background:#fff;color:#10202c;font-weight:800;font-size:15px}
-#loading{position:absolute;inset:0;display:grid;place-items:center;color:#fff;background:#061522;z-index:20}
-</style>
-</head>
-<body>
-<div id="game">
-<div id="loading">Φόρτωση 3D κόσμου…</div>
-<div id="hud">
-<div class="card">⛽ <span id="fuel">78</span> L / 100 L<br><span class="small">ΚΑΥΣΙΜΟ</span></div>
-<div id="rightInfo"><div class="card">€ <span id="money">4,500</span><br><span class="small">ΧΡΗΜΑΤΑ</span></div><div class="card">⚓ <span id="speed">0</span> kn<br><span class="small">ΤΑΧΥΤΗΤΑ</span></div></div>
-</div>
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#071522;font-family:Arial,sans-serif;touch-action:none}#g{position:fixed;inset:0}
+#hud{position:fixed;top:12px;left:0;right:0;display:flex;justify-content:center;gap:8px;z-index:3;pointer-events:none}.c{background:#102433cc;border:1px solid #ffffff33;border-radius:15px;color:white;padding:8px 12px;text-align:center;min-width:85px;backdrop-filter:blur(8px)}.c b{display:block;font-size:18px}.c small{opacity:.7}
+#mission{position:fixed;top:88px;left:50%;transform:translateX(-50%);z-index:3;background:#102433cc;color:#fff;border:1px solid #fff3;border-radius:14px;padding:10px 16px;max-width:85%;text-align:center}
+#joy{position:fixed;left:24px;bottom:35px;width:135px;height:135px;border-radius:50%;background:#07131f66;border:1px solid #fff4;z-index:4}#stick{position:absolute;width:52px;height:52px;border-radius:50%;background:#e9eef0d9;left:41px;top:41px}
+.btn{position:fixed;right:20px;width:135px;height:58px;border:0;border-radius:17px;color:white;font-weight:bold;font-size:14px;z-index:4}.up{bottom:105px;background:#23834fd9}.down{bottom:35px;background:#a53d39d9}
+#start{position:fixed;inset:0;background:radial-gradient(circle at 50% 35%,#28657e,#030a11 75%);z-index:9;display:grid;place-items:center;color:#fff;text-align:center}.box{width:85%;max-width:420px;background:#071522dd;border:1px solid #fff3;border-radius:25px;padding:28px;backdrop-filter:blur(12px)}.box h1{font-size:30px;margin:0 0 8px}.box p{opacity:.75;line-height:1.5}.box button{padding:15px 30px;border:0;border-radius:15px;font-size:17px;font-weight:bold}
+</style></head><body><div id="g"></div>
+<div id="hud"><div class="c"><b id="fuel">77 L</b><small>ΚΑΥΣΙΜΟ</small></div><div class="c"><b id="money">€4.500</b><small>ΧΡΗΜΑΤΑ</small></div><div class="c"><b id="spd">0 kn</b><small>ΤΑΧΥΤΗΤΑ</small></div></div>
 <div id="mission">Αποστολή: πήγαινε στο πράσινο σημείο του λιμανιού</div>
-<div id="controls"><div id="steer"><div id="stick"></div></div><div id="pedals"><button class="btn" id="gas">THROTTLE ▲</button><button class="btn" id="brake">BRAKE / REVERSE ▼</button></div></div>
-<div id="start"><div class="panel"><h2>Boat Life Simulator 3D</h2><div style="opacity:.82;font-size:13px;line-height:1.5">Πρώτο playable mobile prototype.<br>Οδήγησε μέσα στο λιμάνι και δοκίμασε το σκάφος.</div><button id="play">ΠΑΙΞΕ</button></div></div>
-</div>
+<div id="joy"><div id="stick"></div></div><button class="btn up" id="gas">THROTTLE ▲</button><button class="btn down" id="br">BRAKE / REVERSE ▼</button>
+<div id="start"><div class="box"><h1>Boat Life Simulator</h1><p>3D mobile prototype v0.2<br>Νέο cockpit, καλύτερη θάλασσα, φωτισμός, νησί και λιμάνι.</p><button id="go">ΕΝΑΡΞΗ</button></div></div>
 <script type="module">
-import * as THREE from "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js";
-const scene=new THREE.Scene();scene.background=new THREE.Color(0x9bcfe3);scene.fog=new THREE.FogExp2(0x9bcfe3,.0018);
-const camera=new THREE.PerspectiveCamera(67,innerWidth/innerHeight,.1,3000);
-const renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:"high-performance"});renderer.setPixelRatio(Math.min(devicePixelRatio,1.7));renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.enabled=true;renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1.05;game.appendChild(renderer.domElement);
-scene.add(new THREE.HemisphereLight(0xb9e8ff,0x36513f,2.1));const sun=new THREE.DirectionalLight(0xffe3bd,3.2);sun.position.set(-300,420,180);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);scene.add(sun);
-const wg=new THREE.PlaneGeometry(2400,2400,180,180),p=wg.attributes.position;for(let i=0;i<p.count;i++){let x=p.getX(i),y=p.getY(i);p.setZ(i,Math.sin(x*.018)*.55+Math.sin(y*.024)*.38+Math.sin((x+y)*.009)*.5)}wg.rotateX(-Math.PI/2);const water=new THREE.Mesh(wg,new THREE.MeshPhysicalMaterial({color:0x14738a,roughness:.12,transparent:true,opacity:.96}));water.receiveShadow=true;scene.add(water);
-const M=c=>new THREE.MeshStandardMaterial({color:c,roughness:.7});const white=M(0xf1eee4),dark=M(0x202b32),wood=M(0x765238),green=M(0x2f6546);
-function box(w,h,d,m,x,y,z){let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=o.receiveShadow=true;scene.add(o);return o}
-const island=new THREE.Mesh(new THREE.ConeGeometry(155,115,32,6),M(0x7c7254));island.scale.set(1,.55,.72);island.position.set(430,45,-190);island.castShadow=true;scene.add(island);
-for(let i=0;i<28;i++){let a=Math.random()*6.28,r=35+Math.random()*100,h=6+Math.random()*14,b=new THREE.Mesh(new THREE.BoxGeometry(10+Math.random()*8,h,8+Math.random()*8),white);b.position.set(430+Math.cos(a)*r,h/2+32,-190+Math.sin(a)*r*.65);b.rotation.y=Math.random()*3.14;b.castShadow=true;scene.add(b)}
-box(260,5,13,M(0x8b8170),260,1,-65);box(14,5,170,M(0x8b8170),135,1,-145);
-for(let i=0;i<9;i++)box(5,4,5,dark,170+i*23,5,-73);
-const tower=new THREE.Mesh(new THREE.CylinderGeometry(7,10,42,20),white);tower.position.set(105,21,-58);tower.castShadow=true;scene.add(tower);box(16,4,16,white,105,43,-58);const lamp=new THREE.Mesh(new THREE.CylinderGeometry(5,5,7,16),M(0xf4d56a));lamp.position.set(105,48,-58);scene.add(lamp);
-for(let i=0;i<25;i++){let x=310+Math.random()*220,z=-40-Math.random()*250;box(2.2,10,2.2,wood,x,5,z);let crown=new THREE.Mesh(new THREE.SphereGeometry(8+Math.random()*4,12,10),green);crown.position.set(x,14,z);crown.castShadow=true;scene.add(crown)}
-const boat=new THREE.Group();scene.add(boat);boat.position.set(0,2,80);
-const hull=new THREE.Mesh(new THREE.BoxGeometry(7,1.25,16),M(0xe9e5dc));hull.castShadow=true;boat.add(hull);
-const tubeMat=M(0xc8c7bf);for(const sx of [-3.7,3.7]){let t=new THREE.Mesh(new THREE.CapsuleGeometry(1.05,14,10,18),tubeMat);t.rotation.x=Math.PI/2;t.position.set(sx,1,0);t.castShadow=true;boat.add(t)}
-function localBox(w,h,d,m,x,y,z){let o=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),m);o.position.set(x,y,z);o.castShadow=true;boat.add(o);return o}
-localBox(4.5,.45,6,M(0x4b3b2d),0,1.05,1);localBox(3.2,2.2,1.2,dark,0,2.2,-1.8);localBox(3,.12,1.4,M(0x273b48),0,3.15,-1.9);let wheel=new THREE.Mesh(new THREE.TorusGeometry(1,.14,12,32),dark);wheel.position.set(0,3,-1.3);wheel.rotation.x=Math.PI/2;boat.add(wheel);localBox(.35,.8,1.2,dark,1.75,2.2,-1.4);localBox(3.3,.7,1.8,dark,0,1.65,-.2);
-boat.add(camera);camera.position.set(0,4.7,2.9);
-const marker=new THREE.Mesh(new THREE.CylinderGeometry(5,5,1,32),new THREE.MeshBasicMaterial({color:0x4ee57b,transparent:true,opacity:.75}));marker.position.set(75,2,-62);scene.add(marker);
-let fuel=78,money=4500,speed=0,steer=0,throttleOn=false,brakeOn=false,done=false,started=false;
-const stick=document.getElementById('stick'),pad=document.getElementById('steer');let pid=null;
-function stickMove(x,y){let r=pad.getBoundingClientRect(),dx=x-(r.left+r.width/2),dy=y-(r.top+r.height/2),l=Math.hypot(dx,dy),max=45,q=l>max?max/l:1;dx*=q;dy*=q;stick.style.transform=`translate(${dx}px,${dy}px)`;steer=dx/max}
-pad.onpointerdown=e=>{pid=e.pointerId;pad.setPointerCapture(pid);stickMove(e.clientX,e.clientY)};pad.onpointermove=e=>{if(e.pointerId===pid)stickMove(e.clientX,e.clientY)};pad.onpointerup=pad.onpointercancel=()=>{pid=null;stick.style.transform='translate(0,0)';steer=0};
-function hold(el,cb){el.onpointerdown=e=>{e.preventDefault();cb(true)};el.onpointerup=el.onpointercancel=el.onpointerleave=()=>cb(false)}
-hold(gas,v=>throttleOn=v);hold(brake,v=>brakeOn=v);play.onclick=()=>{started=true;start.style.display="none"};
-function update(dt){if(!started)return;if(throttleOn&&fuel>0){speed=Math.min(22,speed+8*dt);fuel=Math.max(0,fuel-.35*dt)}else speed=Math.max(0,speed-3*dt);if(brakeOn)speed=Math.max(0,speed-10*dt);boat.rotation.y-=steer*.72*dt*(.35+speed/22);boat.position.x+=Math.sin(boat.rotation.y)*speed*dt*.55;boat.position.z+=Math.cos(boat.rotation.y)*speed*dt;boat.position.y=2+Math.sin(performance.now()*.0018)*.13;if(!done&&Math.hypot(boat.position.x-75,boat.position.z+62)<18){done=true;money+=500;mission.textContent="Αποστολή ολοκληρώθηκε! +€500"}marker.rotation.y+=dt*.8;fuelEl.textContent=Math.round(fuel);moneyEl.textContent=money.toLocaleString("el-GR");speedEl.textContent=Math.round(speed)}
-const fuelEl=document.getElementById('fuel'),moneyEl=document.getElementById('money'),speedEl=document.getElementById('speed');let last=performance.now();
-function loop(now){requestAnimationFrame(loop);let dt=Math.min(.033,(now-last)/1000);last=now;update(dt);renderer.render(scene,camera)}requestAnimationFrame(loop);
-document.getElementById('loading').style.display='none';
-addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);renderer.setPixelRatio(Math.min(devicePixelRatio,1.7))});
-</script>
-</body></html>
+import*as T from'https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js';
+const S=new T.Scene();S.fog=new T.FogExp2(0x8ebdce,.0018);
+const C=new T.PerspectiveCamera(68,innerWidth/innerHeight,.1,1800);
+const R=new T.WebGLRenderer({antialias:true,powerPreference:'high-performance'});R.setPixelRatio(Math.min(devicePixelRatio,1.8));R.setSize(innerWidth,innerHeight);R.shadowMap.enabled=true;R.toneMapping=T.ACESFilmicToneMapping;R.toneMappingExposure=1.2;R.outputColorSpace=T.SRGBColorSpace;g.append(R.domElement);
+S.add(new T.HemisphereLight(0xc7edff,0x263c46,1.8));let sun=new T.DirectionalLight(0xffe1b0,3);sun.position.set(-180,300,180);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);S.add(sun);
+const sg=new T.SphereGeometry(950,32,16),sm=new T.ShaderMaterial({side:T.BackSide,uniforms:{a:{value:new T.Color(0x4e8daf)},b:{value:new T.Color(0xdceef5)}},vertexShader:'varying vec3 p;void main(){p=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'varying vec3 p;uniform vec3 a,b;void main(){float h=normalize(p).y*.5+.5;gl_FragColor=vec4(mix(b,a,pow(h,.75)),1.);}'});S.add(new T.Mesh(sg,sm));
+const wg=new T.PlaneGeometry(1800,1800,160,160);wg.rotateX(-Math.PI/2);
+const wm=new T.ShaderMaterial({uniforms:{t:{value:0}},vertexShader:'uniform float t;varying vec3 w;void main(){vec3 p=position;p.y+=sin(p.x*.035+t*1.4)*.5+cos(p.z*.045+t)*.4+sin((p.x+p.z)*.018-t)*.6;w=(modelMatrix*vec4(p,1.)).xyz;gl_Position=projectionMatrix*viewMatrix*vec4(w,1.);}',fragmentShader:'varying vec3 w;uniform float t;void main(){vec3 d=vec3(.015,.18,.27),n=vec3(.04,.4,.52);float f=clamp(length(w.xz)/900.,0.,1.);float s=pow(max(0.,sin(w.x*.2+t*3.)*sin(w.z*.16-t*2.)),18.)*.12;gl_FragColor=vec4(mix(n,d,f)+s,1.);}'});let water=new T.Mesh(wg,wm);S.add(water);
+const M=c=>(new T.MeshStandardMaterial({color:c,roughness:.55})),B=(x,y,z,c)=>{let m=new T.Mesh(new T.BoxGeometry(x,y,z),M(c));m.castShadow=m.receiveShadow=true;return m},Y=(r,h,c)=>new T.Mesh(new T.CylinderGeometry(r,r,h,20),M(c));
+function island(x,z,s){let q=new T.Group();q.position.set(x,0,z);let h=new T.Mesh(new T.ConeGeometry(55*s,65*s,32),M(0x607865));h.position.y=34*s;h.scale.z=.7;q.add(h);for(let i=0;i<9;i++){let b=B((5+Math.random()*6)*s,(5+Math.random()*8)*s,(5+Math.random()*6)*s,0xe9dfcf);b.position.set((-28+Math.random()*56)*s,7*s+b.geometry.parameters.height/2,(8+Math.random()*30)*s);q.add(b)}for(let i=0;i<12;i++){let tr=Y(2.5*s,7*s,0x356b46);let a=i*.9,r=(20+Math.random()*30)*s;tr.position.set(Math.cos(a)*r,9*s,Math.sin(a)*r*.6);q.add(tr)}S.add(q)}island(-30,-210,1.15);island(180,-350,.9);
+let dock=B(110,2.5,12,0x665a4c);dock.position.set(0,1,-70);S.add(dock);
+function lighthouse(){let q=new T.Group();q.position.set(-80,0,-115);let b=Y(7,30,0xe9e5d9);b.position.y=15;q.add(b);let l=Y(4.5,4,0xffd978);l.position.y=34;l.material.emissive=new T.Color(0xffa52f);l.material.emissiveIntensity=2.5;q.add(l);let r=Y(5,4,0x263945);r.position.y=38;q.add(r);S.add(q)}lighthouse();
+function boat(){let q=new T.Group();let h=new T.Mesh(new T.CapsuleGeometry(2.3,7,8,24),M(0x1d2930));h.rotation.z=Math.PI/2;h.scale.y=.45;h.position.y=.8;q.add(h);for(let x of[-1.7,1.7]){let t=new T.Mesh(new T.CapsuleGeometry(.58,6.6,8,20),M(0x11191d));t.rotation.z=Math.PI/2;t.scale.y=.7;t.position.set(x,.9,0);q.add(t)}let d=B(3,.25,5.5,0xbfc2bd);d.position.y=1.45;q.add(d);let co=B(1.6,1.4,1,0x182328);co.position.set(0,2.1,.2);q.add(co);let wi=new T.Mesh(new T.BoxGeometry(1.65,.85,.06),new T.MeshPhysicalMaterial({color:0x8ec9df,transparent:true,opacity:.32,roughness:.08}));wi.position.set(0,2.85,-.15);wi.rotation.x=-.22;q.add(wi);let wh=new T.Mesh(new T.TorusGeometry(.38,.07,12,32),M(0x101820));wh.position.set(0,2.35,.82);wh.rotation.x=Math.PI/2;q.add(wh);let se=B(1.5,.25,1.5,0x293338);se.position.set(0,2.05,1.6);q.add(se);let sb=B(1.5,1,.2,0x293338);sb.position.set(0,2.45,2.2);q.add(sb);q.position.set(0,.25,35);S.add(q);return q}let boatObj=boat();
+let v=0,st=0,gas=0,rev=0,fuelV=77,moneyV=4500,done=false,started=false,target=new T.Vector3(0,0,-63);
+let mark=new T.Mesh(new T.RingGeometry(3,4,32),new T.MeshBasicMaterial({color:0x48ff83,side:T.DoubleSide}));mark.rotation.x=-Math.PI/2;mark.position.set(0,.2,-63);S.add(mark);
+function joyCtl(){let j=document.getElementById('joy'),k=document.getElementById('stick'),on=0; j.onpointerdown=j.onpointermove=e=>{on=1;let r=j.getBoundingClientRect(),dx=e.clientX-(r.left+r.width/2),dy=e.clientY-(r.top+r.height/2),l=Math.hypot(dx,dy),m=42;if(l>m){dx*=m/l;dy*=m/l}k.style.transform=`translate(${dx}px,${dy}px)`;st=Math.max(-1,Math.min(1,dx/m))};j.onpointerup=j.onpointercancel=()=>{on=0;st=0;k.style.transform='translate(0,0)'}}joyCtl();
+function hold(e,set){e.onpointerdown=()=>set(1);e.onpointerup=e.onpointercancel=e.onpointerleave=()=>set(0)}hold(gas,x=>gas=x);hold(br,x=>rev=x);
+go.onclick=()=>{started=true;start.style.display='none'};
+let clock=new T.Clock();function loop(){requestAnimationFrame(loop);let dt=Math.min(clock.getDelta(),.04);wm.uniforms.t.value+=dt;mark.rotation.z+=dt*.7;
+if(started){v+=(gas?5.5:0)+(rev?-5.5:-1.1);v=Math.max(-3.5,Math.min(13,v));boatObj.rotation.y-=st*v*.012;let f=new T.Vector3(0,0,-1).applyQuaternion(boatObj.quaternion);boatObj.position.addScaledVector(f,v*dt);boatObj.position.y=.25+Math.sin(performance.now()*.002)*.12;fuelV-=Math.abs(v)*dt*.018;
+if(!done&&boatObj.position.distanceTo(target)<11){done=true;moneyV+=500;mission.textContent='Αποστολή ολοκληρώθηκε — +€500';mark.visible=false}
+let cp=new T.Vector3(0,3.15,3.05).applyQuaternion(boatObj.quaternion).add(boatObj.position);C.position.lerp(cp,.12);let lk=new T.Vector3(0,2.45,-15).applyQuaternion(boatObj.quaternion).add(boatObj.position);C.lookAt(lk)}
+fuel.textContent=Math.max(0,fuelV).toFixed(0)+' L';money.textContent='€'+moneyV.toLocaleString('el-GR');spd.textContent=Math.max(0,v*1.94).toFixed(0)+' kn';R.render(S,C)}loop();
+addEventListener('resize',()=>{C.aspect=innerWidth/innerHeight;C.updateProjectionMatrix();R.setSize(innerWidth,innerHeight)});
+</script></body></html>
